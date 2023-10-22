@@ -1,11 +1,11 @@
-import pandas as pd
 import evaluate
 import nltk
 import numpy as np
 from typing import List, Tuple
 from nltk.tokenize import sent_tokenize
-from datasets import Dataset, load_dataset, concatenate_datasets
+from datasets import Dataset, concatenate_datasets
 from huggingface_hub import HfFolder
+from data_loader import load_dataset
 from transformers import (
     AutoTokenizer,
     AutoModelForSeq2SeqLM,
@@ -13,28 +13,12 @@ from transformers import (
     Seq2SeqTrainer,
     Seq2SeqTrainingArguments
 )
-# https://github.com/M-Taghizadeh/flan-t5-base-imdb-text-classification/blob/master/01_Fine_Tuning_flan_t5_imdb_text_classification.ipynb
 
 MODEL_ID = "google/flan-t5-large"
 REPOSITORY_ID = f"{MODEL_ID.split('/')[1]}-ecommerce-text-classification"
 
-# Load dataset from the Kaggle
-dataset_ecommerce_pandas = pd.read_csv('data/ecommerce_kaggle_dataset.csv', header=None, names=['label', 'text'])
-dataset_ecommerce_pandas['label'] = dataset_ecommerce_pandas['label'].astype(str)
-dataset_ecommerce_pandas['text'] = dataset_ecommerce_pandas['text'].astype(str)
-dataset = Dataset.from_pandas(dataset_ecommerce_pandas)
-dataset = dataset.shuffle(seed=42)
-dataset = dataset.train_test_split(test_size=0.2)
-
-# train_df = pd.DataFrame(dataset['train'])
-# test_df = pd.DataFrame(dataset['test'])
-# dataset.clear()
-# train_df['label'] = train_df['label'].astype(str)
-# train_df['text'] = train_df['text'].astype(str)
-# test_df['label'] = test_df['label'].astype(str)
-# test_df['text'] = test_df['text'].astype(str)
-# dataset['train'] = Dataset.from_pandas(train_df)
-# dataset['test'] = Dataset.from_pandas(test_df)
+# Load dataset
+dataset = load_dataset()
 
 # Load tokenizer of FLAN-t5
 tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
