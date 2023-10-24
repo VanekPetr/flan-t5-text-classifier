@@ -14,7 +14,7 @@ from transformers import (
     Seq2SeqTrainingArguments
 )
 
-MODEL_ID = "google/flan-t5-large"
+MODEL_ID = "google/flan-t5-base"
 REPOSITORY_ID = f"{MODEL_ID.split('/')[1]}-ecommerce-text-classification"
 
 # Load dataset
@@ -152,7 +152,7 @@ def train() -> None:
 
     # TRAIN
     trainer.train()
-    trainer.evaluate()
+    # trainer.evaluate()
 
     # SAVE
     tokenizer.save_pretrained(REPOSITORY_ID)
