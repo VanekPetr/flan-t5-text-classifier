@@ -7,9 +7,8 @@ from sklearn.metrics import classification_report
 dataset = load_dataset()
 
 # Load model and tokenizer from the hub
-# TODO TBD train the model and save it to the hub
-tokenizer = AutoTokenizer.from_pretrained("VanekPetr/flan-t5-large-ecommerce-text-classification")
-model = AutoModelForSeq2SeqLM.from_pretrained("VanekPetr/flan-t5-large-ecommerce-text-classification")
+tokenizer = AutoTokenizer.from_pretrained("VanekPetr/flan-t5-base-ecommerce-text-classification")
+model = AutoModelForSeq2SeqLM.from_pretrained("VanekPetr/flan-t5-base-ecommerce-text-classification")
 model.to('cuda') if torch.cuda.is_available() else model.to('cpu')
 
 

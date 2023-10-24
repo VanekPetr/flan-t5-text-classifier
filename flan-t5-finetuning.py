@@ -152,7 +152,6 @@ def train() -> None:
 
     # TRAIN
     trainer.train()
-    # trainer.evaluate()
 
     # SAVE
     tokenizer.save_pretrained(REPOSITORY_ID)
