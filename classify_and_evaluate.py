@@ -21,7 +21,8 @@ def classify(text_to_classify: str) -> str:
     return prediction
 
 
-if __name__ == '__main__':
+def evaluate() -> None:
+    """Evaluate the model on the test dataset."""
     predictions_list, labels_list = [], []
 
     samples_number = len(dataset['test'])
@@ -36,3 +37,7 @@ if __name__ == '__main__':
 
     report = classification_report(labels_list, predictions_list)
     print(report)
+
+
+if __name__ == '__main__':
+    evaluate()
