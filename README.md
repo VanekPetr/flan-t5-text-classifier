@@ -22,9 +22,7 @@ The project uses a Seq2SeqTrainer for training the model. It also includes a hel
 
 ## Usage
 
-To use the code in the project you need to run the main python script which will trigger the training of the model.
-
-
+To leverage the project you need to run the `flan-t5-finetuning.py` script which will trigger the training of the model.
 
 The 'train' function fine-tunes the flan-t5 model, trains it with the dataset, outputs the metrics, creates a model card and pushes the model to Hugging Face model hub.
 
