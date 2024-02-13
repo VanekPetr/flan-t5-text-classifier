@@ -11,7 +11,8 @@ tokenizer = AutoTokenizer.from_pretrained("VanekPetr/flan-t5-base-ecommerce-text
 model = AutoModelForSeq2SeqLM.from_pretrained("VanekPetr/flan-t5-base-ecommerce-text-classification")
 model.to('cuda' if torch.cuda.is_available() else 'cpu')
 
-def classify(texts_to_classify):
+
+def classify(texts_to_classify: str):
     """Classify a batch of texts using the model."""
     inputs = tokenizer(texts_to_classify, padding='max_length', truncation=True, max_length=256, return_tensors='pt')
     inputs = inputs.to('cuda' if torch.cuda.is_available() else 'cpu')
@@ -21,6 +22,7 @@ def classify(texts_to_classify):
 
     predictions = [tokenizer.decode(output, skip_special_tokens=True) for output in outputs]
     return predictions
+
 
 def evaluate():
     """Evaluate the model on the test dataset."""
@@ -44,6 +46,7 @@ def evaluate():
     progress_bar.close()
     report = classification_report(labels_list, predictions_list)
     print(report)
+
 
 if __name__ == '__main__':
     evaluate()
