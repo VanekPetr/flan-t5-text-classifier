@@ -94,7 +94,7 @@ def preprocess_function(sample: Dataset, padding: str = "max_length") -> dict:
     # padding in the loss.
     if padding == "max_length":
         labels["input_ids"] = [
-            [(l if l != tokenizer.pad_token_id else -100) for l in label]
+            [(la if la != tokenizer.pad_token_id else -100) for la in label]
             for label in labels["input_ids"]
         ]
 
