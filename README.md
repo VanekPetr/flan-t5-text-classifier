@@ -28,11 +28,18 @@ The 'train' function fine-tunes the flan-t5 model, trains it with the dataset, o
 
 The preprocess function tokenizes the inputs, and also handles tokenization of the target labels. The compute_metrics function evaluates the model performance based on the F1 metric.
 
-## Requirements
+## Getting Started
 
-You need to install the required Python packages mentioned in the `requirements.txt` file.
+STEP 1: create and activate python virtual environment
+``` bash
+python -m venv venv
+source venv/bin/activate
+```
 
-Please refer to the source code for more detailed information about the implementation.
+STEP 2: install requirements with [poetry](https://python-poetry.org/docs/#installing-with-the-official-installer)
+``` bash
+poetry install -vv
+```
 
 ## Versioning
 
