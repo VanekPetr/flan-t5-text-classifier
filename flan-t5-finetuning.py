@@ -1,18 +1,20 @@
+from typing import List, Tuple
+
 import evaluate
 import nltk
 import numpy as np
-from typing import List, Tuple
-from nltk.tokenize import sent_tokenize
 from datasets import Dataset, concatenate_datasets
 from huggingface_hub import HfFolder
-from data_loader import load_dataset
+from nltk.tokenize import sent_tokenize
 from transformers import (
-    AutoTokenizer,
     AutoModelForSeq2SeqLM,
+    AutoTokenizer,
     DataCollatorForSeq2Seq,
     Seq2SeqTrainer,
-    Seq2SeqTrainingArguments
+    Seq2SeqTrainingArguments,
 )
+
+from data_loader import load_dataset
 
 MODEL_ID = "google/flan-t5-base"
 REPOSITORY_ID = f"{MODEL_ID.split('/')[1]}-ecommerce-text-classification"
@@ -29,7 +31,9 @@ metric = evaluate.load("f1")
 # The maximum total input sequence length after tokenization.
 # Sequences longer than this will be truncated, sequences shorter will be padded.
 tokenized_inputs = concatenate_datasets([dataset["train"], dataset["test"]]).map(
-    lambda x: tokenizer(x["text"], truncation=True), batched=True, remove_columns=['text', 'label']
+    lambda x: tokenizer(x["text"], truncation=True),
+    batched=True,
+    remove_columns=["text", "label"],
 )
 max_source_length = max([len(x) for x in tokenized_inputs["input_ids"]])
 print(f"Max source length: {max_source_length}")
@@ -37,7 +41,9 @@ print(f"Max source length: {max_source_length}")
 # The maximum total sequence length for target text after tokenization.
 # Sequences longer than this will be truncated, sequences shorter will be padded."
 tokenized_targets = concatenate_datasets([dataset["train"], dataset["test"]]).map(
-    lambda x: tokenizer(x["label"], truncation=True), batched=True, remove_columns=['text', 'label']
+    lambda x: tokenizer(x["label"], truncation=True),
+    batched=True,
+    remove_columns=["text", "label"],
 )
 max_target_length = max([len(x) for x in tokenized_targets["input_ids"]])
 print(f"Max target length: {max_target_length}")
@@ -48,10 +54,10 @@ training_args = Seq2SeqTrainingArguments(
     per_device_train_batch_size=8,
     per_device_eval_batch_size=8,
     predict_with_generate=True,
-    fp16=False,     # Overflows with fp16
+    fp16=False,  # Overflows with fp16
     learning_rate=3e-4,
     num_train_epochs=2,
-    logging_dir=f"{REPOSITORY_ID}/logs",    # logging & evaluation strategies
+    logging_dir=f"{REPOSITORY_ID}/logs",  # logging & evaluation strategies
     logging_strategy="epoch",
     evaluation_strategy="no",
     save_strategy="epoch",
@@ -66,30 +72,40 @@ training_args = Seq2SeqTrainingArguments(
 
 
 def preprocess_function(sample: Dataset, padding: str = "max_length") -> dict:
-    """ Preprocess the dataset. """
+    """Preprocess the dataset."""
 
     # add prefix to the input for t5
     inputs = [item for item in sample["text"]]
 
     # tokenize inputs
-    model_inputs = tokenizer(inputs, max_length=max_source_length, padding=padding, truncation=True)
+    model_inputs = tokenizer(
+        inputs, max_length=max_source_length, padding=padding, truncation=True
+    )
 
     # Tokenize targets with the `text_target` keyword argument
-    labels = tokenizer(text_target=sample["label"], max_length=max_target_length, padding=padding, truncation=True)
+    labels = tokenizer(
+        text_target=sample["label"],
+        max_length=max_target_length,
+        padding=padding,
+        truncation=True,
+    )
 
     # If we are padding here, replace all tokenizer.pad_token_id in the labels by -100 when we want to ignore
     # padding in the loss.
     if padding == "max_length":
         labels["input_ids"] = [
-            [(l if l != tokenizer.pad_token_id else -100) for l in label] for label in labels["input_ids"]
+            [(la if la != tokenizer.pad_token_id else -100) for la in label]
+            for label in labels["input_ids"]
         ]
 
     model_inputs["labels"] = labels["input_ids"]
     return model_inputs
 
 
-def postprocess_text(preds: List[str], labels: List[str]) -> Tuple[List[str], List[str]]:
-    """ helper function to postprocess text"""
+def postprocess_text(
+    preds: List[str], labels: List[str]
+) -> Tuple[List[str], List[str]]:
+    """helper function to postprocess text"""
     preds = [pred.strip() for pred in preds]
     labels = [label.strip() for label in labels]
 
@@ -112,17 +128,23 @@ def compute_metrics(eval_preds):
     # Some simple post-processing
     decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
 
-    result = metric.compute(predictions=decoded_preds, references=decoded_labels, average='macro')
+    result = metric.compute(
+        predictions=decoded_preds, references=decoded_labels, average="macro"
+    )
     result = {k: round(v * 100, 4) for k, v in result.items()}
-    prediction_lens = [np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds]
+    prediction_lens = [
+        np.count_nonzero(pred != tokenizer.pad_token_id) for pred in preds
+    ]
     result["gen_len"] = np.mean(prediction_lens)
     return result
 
 
 def train() -> None:
-    """ Train the model. """
+    """Train the model."""
 
-    tokenized_dataset = dataset.map(preprocess_function, batched=True, remove_columns=['text', 'label'])
+    tokenized_dataset = dataset.map(
+        preprocess_function, batched=True, remove_columns=["text", "label"]
+    )
     print(f"Keys of tokenized dataset: {list(tokenized_dataset['train'].features)}")
 
     # load model from the hub
@@ -137,7 +159,7 @@ def train() -> None:
         tokenizer,
         model=model,
         label_pad_token_id=label_pad_token_id,
-        pad_to_multiple_of=8
+        pad_to_multiple_of=8,
     )
 
     # Create Trainer instance
