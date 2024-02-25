@@ -1,11 +1,13 @@
-import torch
-from typing import List, Tuple
 from time import time
+from typing import List, Tuple
+
+import torch
 from loguru import logger
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
-from classifier.data_loader import load_dataset, id2label
-from tqdm.auto import tqdm
 from sklearn.metrics import classification_report
+from tqdm.auto import tqdm
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
+from classifier.data_loader import id2label, load_dataset
 
 dataset = load_dataset()
 
@@ -14,7 +16,7 @@ dataset = load_dataset()
 MODEL_ID = "VanekPetr/flan-t5-small-ecommerce-text-classification"
 
 model = AutoModelForSequenceClassification.from_pretrained(MODEL_ID)
-model.to('cuda') if torch.cuda.is_available() else model.to('cpu')
+model.to("cuda") if torch.cuda.is_available() else model.to("cpu")
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
 
@@ -24,13 +26,21 @@ def classify(texts_to_classify: List[str]) -> List[Tuple[str, float]]:
 
     # Tokenize all texts in the batch
     start = time()
-    inputs = tokenizer(texts_to_classify, return_tensors='pt', max_length=512, truncation=True, padding=True)
-    inputs = inputs.to('cuda' if torch.cuda.is_available() else 'cpu')
+    inputs = tokenizer(
+        texts_to_classify,
+        return_tensors="pt",
+        max_length=512,
+        truncation=True,
+        padding=True,
+    )
+    inputs = inputs.to("cuda" if torch.cuda.is_available() else "cpu")
 
     # Get predictions
     with torch.no_grad():
         outputs = model(**inputs)
-    logger.debug(f'Classification of {len(texts_to_classify)} table/s took {time() - start} seconds')
+    logger.debug(
+        f"Classification of {len(texts_to_classify)} table/s took {time() - start} seconds"
+    )
 
     # Process the outputs to get the probability distribution
     logits = outputs.logits
@@ -38,7 +48,9 @@ def classify(texts_to_classify: List[str]) -> List[Tuple[str, float]]:
 
     # Get the top class and the corresponding probability (certainty) for each input text
     confidences, predicted_classes = torch.max(probs, dim=1)
-    predicted_classes = predicted_classes.cpu().numpy()  # Move to CPU for numpy conversion if needed
+    predicted_classes = (
+        predicted_classes.cpu().numpy()
+    )  # Move to CPU for numpy conversion if needed
     confidences = confidences.cpu().numpy()  # Same here
 
     # Map predicted class IDs to labels
@@ -77,4 +89,3 @@ def evaluate():
 
 if __name__ == "__main__":
     evaluate()
-

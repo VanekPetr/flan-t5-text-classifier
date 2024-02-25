@@ -1,14 +1,23 @@
-import numpy as np
 import nltk
+import numpy as np
 from huggingface_hub import HfFolder
-from transformers import AutoTokenizer, AutoModelForSequenceClassification, TrainingArguments, Trainer, AutoConfig
-from classifier.data_loader import load_dataset, label2id, id2label
 from sklearn.metrics import precision_recall_fscore_support
+from transformers import (
+    AutoConfig,
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    Trainer,
+    TrainingArguments,
+)
+
+from classifier.data_loader import id2label, label2id, load_dataset
 
 MODEL_ID = "google/flan-t5-small"
 REPOSITORY_ID = f"{MODEL_ID.split('/')[1]}-ecommerce-text-classification"
 
-config = AutoConfig.from_pretrained(MODEL_ID, num_labels=len(label2id), id2label=id2label, label2id=label2id)
+config = AutoConfig.from_pretrained(
+    MODEL_ID, num_labels=len(label2id), id2label=id2label, label2id=label2id
+)
 model = AutoModelForSequenceClassification.from_pretrained(MODEL_ID, config=config)
 tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
 
@@ -22,7 +31,7 @@ training_args = TrainingArguments(
     report_to="tensorboard",
     per_device_train_batch_size=8,
     per_device_eval_batch_size=8,
-    fp16=False,     # Overflows with fp16
+    fp16=False,  # Overflows with fp16
     learning_rate=3e-4,
     save_strategy="epoch",
     save_total_limit=2,
@@ -30,27 +39,27 @@ training_args = TrainingArguments(
     push_to_hub=True,
     hub_strategy="every_save",
     hub_model_id=REPOSITORY_ID,
-    hub_token=HfFolder.get_token()
+    hub_token=HfFolder.get_token(),
 )
 
 
 def tokenize_function(examples) -> dict:
-    """ Tokenize the text column in the dataset """
+    """Tokenize the text column in the dataset"""
     return tokenizer(examples["text"], padding="max_length", truncation=True)
 
 
 def compute_metrics(eval_pred) -> dict:
-    """ Compute metrics for evaluation """
+    """Compute metrics for evaluation"""
     logits, labels = eval_pred
-    if isinstance(logits, tuple):  # if the model also returns hidden_states or attentions
+    if isinstance(
+        logits, tuple
+    ):  # if the model also returns hidden_states or attentions
         logits = logits[0]
     predictions = np.argmax(logits, axis=-1)
-    precision, recall, f1, _ = precision_recall_fscore_support(labels, predictions, average='binary')
-    return {
-        'precision': precision,
-        'recall': recall,
-        'f1': f1
-    }
+    precision, recall, f1, _ = precision_recall_fscore_support(
+        labels, predictions, average="binary"
+    )
+    return {"precision": precision, "recall": recall, "f1": f1}
 
 
 def train() -> None:
