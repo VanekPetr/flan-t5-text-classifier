@@ -1,5 +1,5 @@
 import torch
-from data_loader import load_dataset
+from classifier.data_loader import load_dataset
 from sklearn.metrics import classification_report
 from tqdm.auto import tqdm
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
