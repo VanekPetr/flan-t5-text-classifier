@@ -14,7 +14,7 @@ from transformers import (
     Seq2SeqTrainingArguments,
 )
 
-from data_loader import load_dataset
+from classifier.data_loader import load_dataset
 
 MODEL_ID = "google/flan-t5-base"
 REPOSITORY_ID = f"{MODEL_ID.split('/')[1]}-ecommerce-text-classification"
