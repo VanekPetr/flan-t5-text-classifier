@@ -10,6 +10,12 @@ from transformers import (
     TrainingArguments,
 )
 
+import pathlib
+import sys
+
+# Get the path to the directory two levels up
+two_levels_up = pathlib.Path(__file__).resolve().parents[2]
+sys.path.append(str(two_levels_up))
 from classifier.data_loader import id2label, label2id, load_dataset
 
 MODEL_ID = "google/flan-t5-small"
@@ -24,10 +30,8 @@ tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
 training_args = TrainingArguments(
     num_train_epochs=2,
     output_dir=REPOSITORY_ID,
-    evaluation_strategy="steps",
-    eval_steps=1000,
     logging_strategy="steps",
-    logging_steps=10,
+    logging_steps=100,
     report_to="tensorboard",
     per_device_train_batch_size=8,
     per_device_eval_batch_size=8,
