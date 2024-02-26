@@ -12,7 +12,6 @@ from classifier.data_loader import id2label, load_dataset
 dataset = load_dataset()
 
 # Load the model and tokenizer
-# TODO train this model!
 MODEL_ID = "VanekPetr/flan-t5-small-ecommerce-text-classification"
 
 model = AutoModelForSequenceClassification.from_pretrained(MODEL_ID)
