@@ -71,7 +71,7 @@ def train() -> None:
     """
     Train the model and save it to the Hugging Face Hub.
     """
-    dataset = load_dataset()
+    dataset = load_dataset("AutoModelForSequenceClassification")
     tokenized_datasets = dataset.map(tokenize_function, batched=True)
 
     nltk.download("punkt")
