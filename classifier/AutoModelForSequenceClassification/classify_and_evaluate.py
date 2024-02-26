@@ -38,7 +38,7 @@ def classify(texts_to_classify: List[str]) -> List[Tuple[str, float]]:
     with torch.no_grad():
         outputs = model(**inputs)
     logger.debug(
-        f"Classification of {len(texts_to_classify)} table/s took {time() - start} seconds"
+        f"Classification of {len(texts_to_classify)} examples took {time() - start} seconds"
     )
 
     # Process the outputs to get the probability distribution
@@ -60,7 +60,6 @@ def classify(texts_to_classify: List[str]) -> List[Tuple[str, float]]:
 
 
 def evaluate():
-    # TODO finish after model is trained
     """Evaluate the model on the test dataset."""
     predictions_list, labels_list = [], []
 
@@ -77,12 +76,12 @@ def evaluate():
         batch_predictions = classify(batch_texts)
 
         predictions_list.extend(batch_predictions)
-        labels_list.extend([str(label) for label in batch_labels])
+        labels_list.extend([id2label[label_id] for label_id in batch_labels])
 
         progress_bar.update(1)
 
     progress_bar.close()
-    report = classification_report(labels_list, predictions_list)
+    report = classification_report(labels_list, [pair[0] for pair in predictions_list])
     print(report)
 
 
