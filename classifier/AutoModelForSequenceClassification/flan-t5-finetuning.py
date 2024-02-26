@@ -9,7 +9,12 @@ from transformers import (
     Trainer,
     TrainingArguments,
 )
+import sys
+import pathlib
 
+# Get the path to the directory two levels up
+two_levels_up = pathlib.Path(__file__).resolve().parents[2]
+sys.path.append(str(two_levels_up))
 from classifier.data_loader import id2label, label2id, load_dataset
 
 MODEL_ID = "google/flan-t5-small"
