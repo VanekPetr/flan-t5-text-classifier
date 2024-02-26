@@ -29,7 +29,7 @@ The project employs the tokenizer of flan-t5 by Hugging Face, which helps in spl
 
 An evaluation function has been implemented for post-processing the labels and predictions, which will also handle sequence length adjustments.
 
-The project uses a Seq2SeqTrainer for training the model. It also includes a helper function to preprocess the dataset.
+The project uses `Seq2SeqTrainer` and `SequenceClassification` for training the model. It also includes a helper function to preprocess the dataset.
 
 ## Usage
 
