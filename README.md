@@ -6,15 +6,15 @@ text dataset for 4 categories - "Electronics", "Household", "Books" and "Clothin
 
 ## Evaluation Statistics
 ### AutoModelForSequenceClassification
-Text Classification model which can be found on [HuggingFace](https://huggingface.co/VanekPetr/flan-t5-small-ecommerce-text-classification) is used for the task of text classification. The model is trained on the dataset and evaluated on the test set. The evaluation metrics are as follows:
+Text Classification model can be found on [HuggingFace](https://huggingface.co/VanekPetr/flan-t5-small-ecommerce-text-classification). The model is trained on the dataset and evaluated on the test set. The evaluation metrics are as follows:
 <p>
   <img width="100%" src="data/evaluation_classification_model.png"></a>
 </p>
 
-The main **pros** of this model is that together with prediction it outputs the confidence score for each class. This can be used to filter out the predictions with low confidence.
+The main **advantage** of this model is that together with prediction it outputs the confidence score for each class. This can be used to filter out the predictions with low confidence.
 
 ### AutoModelForSeq2Seq
-Text2Text Generation model which can be found on [HuggingFace](https://huggingface.co/VanekPetr/flan-t5-base-ecommerce-text-classification) is used for the task of text classification. The model is trained on the dataset and evaluated on the test set. The evaluation metrics are as follows:
+Text2Text Generation model can be found on [HuggingFace](https://huggingface.co/VanekPetr/flan-t5-base-ecommerce-text-classification). The model is trained on the dataset and evaluated on the test set. The evaluation metrics are as follows:
 <p>
   <img width="100%" src="data/evaluation.png"></a>
 </p>
