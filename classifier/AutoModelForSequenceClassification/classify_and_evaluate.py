@@ -9,7 +9,7 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
 from classifier.data_loader import id2label, load_dataset
 
-dataset = load_dataset()
+dataset = load_dataset("AutoModelForSequenceClassification")
 
 # Load the model and tokenizer
 MODEL_ID = "VanekPetr/flan-t5-small-ecommerce-text-classification"
