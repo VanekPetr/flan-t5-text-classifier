@@ -3,7 +3,18 @@
 This GitHub project is aimed at fine-tuning the flan t5 model for a text classification task using an E-commerce
 text dataset for 4 categories - "Electronics", "Household", "Books" and "Clothing & Accessories".
 
-## Results
+
+## Evaluation Statistics
+### AutoModelForSequenceClassification
+Text Classification model can be found on [HuggingFace](https://huggingface.co/VanekPetr/flan-t5-small-ecommerce-text-classification). The model is trained on the dataset and evaluated on the test set. The evaluation metrics are as follows:
+<p>
+  <img width="100%" src="data/evaluation_classification_model.png"></a>
+</p>
+
+The main **advantage** of this model is that together with prediction it outputs the confidence score for each class. This can be used to filter out the predictions with low confidence.
+
+### AutoModelForSeq2Seq
+Text2Text Generation model can be found on [HuggingFace](https://huggingface.co/VanekPetr/flan-t5-base-ecommerce-text-classification). The model is trained on the dataset and evaluated on the test set. The evaluation metrics are as follows:
 <p>
   <img width="100%" src="data/evaluation.png"></a>
 </p>
