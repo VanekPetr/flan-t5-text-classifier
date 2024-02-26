@@ -1,3 +1,6 @@
+import pathlib
+import sys
+
 import nltk
 import numpy as np
 from huggingface_hub import HfFolder
@@ -9,8 +12,6 @@ from transformers import (
     Trainer,
     TrainingArguments,
 )
-import sys
-import pathlib
 
 # Get the path to the directory two levels up
 two_levels_up = pathlib.Path(__file__).resolve().parents[2]
