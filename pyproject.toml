@@ -18,7 +18,7 @@ tqdm = "4.66.2"
 torch = "2.2.1"
 evaluate = "0.4.1"
 nltk = "3.8.1"
-accelerate = "0.27.2"
+accelerate = "0.28.0"
 tensorboardX = "2.6.2.2"
 
 [tool.poetry.group.test.dependencies]
