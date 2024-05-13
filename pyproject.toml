@@ -9,7 +9,7 @@ repository = "https://github.com/VanekPetr/flan-t5-text-classifier"
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"
 pandas = "2.2.2"
-pre-commit = "3.7.0"
+pre-commit = "3.7.1"
 loguru = "0.7.2"
 datasets = "2.19.1"
 transformers = "4.40.1"
